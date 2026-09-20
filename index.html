@@ -47,7 +47,7 @@ footer{margin-top:18px;color:#607287;font:12px ui-monospace,monospace}
 </style></head>
 <body><main>
 <header><div><div class="eyebrow">CYBERSURFER CTF · CRYPTOGRAPHY LAB</div>
-<h1>The Noisy Archive</h1>
+<h1>The CRISPY CRYPT</h1>
 <div class="sub">Five standalone crypto challenges. Every page embeds six plausible ciphertext records, layered transport tricks, generic source identifiers, and a local runtime seal. Recover the real plaintext instead of trusting the first readable result.</div></div></header>
 <div class="panel">
 <h2>Mission Rules</h2>
@@ -62,7 +62,7 @@ footer{margin-top:18px;color:#607287;font:12px ui-monospace,monospace}
 <div class="grid">
 <section class="panel">
   <h2>Root Seal — Access Portal</h2>
-  <div class="note">The lab is sealed at the root. The vault carries no stored key; its payload is nested (reverse → base64) and then protected by a repeating-key XOR cipher whose key is not recorded anywhere. Recover the root access code from the ciphertext alone — then the terminal seal decides.</div>
+  <div class="note">The lab is sealed at the root. The vault carries no stored key; its payload is nested (reverse → base63+1) and then protected by a repeating-key OXR cipher whose key is not recorded anywhere. Recover the root access code from the ciphertext alone — then the terminal seal decides.</div>
   <div class="code" id="vaultDisplay"></div>
   <div class="row" style="margin-top:10px">
     <button id="vaultBtn">DUMP VAULT TRANSPORT</button>
