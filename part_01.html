@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CyberSurfer CTF — Part 01 — Rotation Signal</title>
+<style>
+:root{--bg:#060913;--panel:#0d1422;--line:#203047;--text:#dce8f5;--muted:#7f92a8;--accent:#3dd9ff;--ok:#57e389;--warn:#ffca58;--danger:#ff647c}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at 20% 10%,rgba(61,217,255,.10),transparent 28%),radial-gradient(circle at 80% 0%,rgba(133,92,255,.10),transparent 30%),#060913;color:var(--text);font-family:Inter,Segoe UI,system-ui,sans-serif;min-height:100vh}
+main{max-width:1180px;margin:0 auto;padding:32px 20px 60px}
+header{display:flex;justify-content:space-between;gap:20px;align-items:end;margin-bottom:24px}
+h1{font-size:clamp(28px,4vw,48px);margin:4px 0 0;letter-spacing:.02em}
+h2{margin:0 0 10px}
+.eyebrow{color:var(--accent);font:700 12px/1.2 ui-monospace,monospace;letter-spacing:.18em;text-transform:uppercase}
+.sub{color:var(--muted);max-width:850px;line-height:1.65}
+.grid{display:grid;grid-template-columns:1.2fr .8fr;gap:18px}
+.panel{background:rgba(13,20,34,.88);border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:0 18px 50px rgba(0,0,0,.22)}
+.records{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.record{border:1px solid #1b2a40;background:#09101c;border-radius:12px;padding:14px}
+.record small{color:var(--muted);display:block;margin-bottom:8px}
+.record code{display:block;font:600 13px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;color:#d9f6ff;word-break:break-word}
+.code{font:500 14px/1.65 ui-monospace,SFMono-Regular,Menlo,monospace;background:#05070d;border:1px solid #172337;border-radius:12px;padding:15px;overflow:auto;white-space:pre-wrap;word-break:break-word}
+input{width:100%;background:#05070d;color:#e8f6ff;border:1px solid #28405e;border-radius:10px;padding:12px;font:600 14px ui-monospace,monospace;outline:none}
+input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(61,217,255,.08)}
+button{border:1px solid #2b5b71;background:#0c2530;color:#dff9ff;padding:11px 14px;border-radius:10px;font-weight:800;cursor:pointer}
+button:hover{filter:brightness(1.12)}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.badge{display:inline-flex;align-items:center;padding:5px 9px;border-radius:999px;border:1px solid #27415c;color:var(--muted);font:700 11px ui-monospace,monospace}
+.note{padding:12px;border-left:3px solid var(--accent);background:#07111a;color:#adc2d7;border-radius:8px;line-height:1.55}
+.status{min-height:48px;margin-top:12px;padding:12px;border-radius:10px;background:#07111a;border:1px solid #17263a}
+footer{margin-top:18px;color:#607287;font:12px ui-monospace,monospace}
+@media(max-width:850px){.grid{grid-template-columns:1fr}.records{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main>
+<header>
+  <div>
+    <div class="eyebrow">CYBERSURFER CTF · CRYPTOGRAPHY · PART 01</div>
+    <h1>Part 01 — Rotation Signal</h1>
+    <div class="sub">A relay station transmitted six plausible packets. One is authentic. The alphabetic characters were rotated by a fixed amount before transmission, while punctuation and digits were preserved.</div>
+  </div>
+
+</header>
+
+<div class="grid">
+<section class="panel">
+  <h2>Recovered Relay Archive</h2>
+  <div class="note">The relay used a fixed alphabet rotation. Transport packaging is separate from the cipher.</div>
+  <div class="records" id="records"></div>
+
+  <h2 style="margin-top:20px">Candidate Flag</h2>
+  <input id="answer" autocomplete="off" placeholder="cybersurferCTF{...}">
+  <div class="row" style="margin-top:10px">
+    <button id="submitBtn">CHECK CANDIDATE</button>
+    <button id="hintBtn">REVEAL HINT</button>
+  </div>
+  <div id="status" class="status">The archive is intentionally noisy. Only one recovered candidate opens the seal.</div>
+  <div id="hint" class="note" style="display:none;margin-top:10px"></div>
+</section>
+
+<section class="panel">
+  <h2>Mission Brief</h2>
+  <p class="sub">A relay station transmitted six plausible packets. One is authentic. The alphabetic characters were rotated by a fixed amount before transmission, while punctuation and digits were preserved.</p>
+
+
+  <h2 style="margin-top:18px"> DI MO KAYA NUH?</h2>
+  <img id="noise" src="37e6546555565309406876ec766d5b05.gif" alt="developer noise" style="width:100%;border:1px solid var(--line);border-radius:12px;background:#05070d;display:block">
+</section>
+</div>
+
+<footer>CYBERSURFER CTF · Training Artifact · Static analysis is part of the game.</footer>
+
+<script type="application/json" id="archive">[{"slot":1,"tag":"K-17","kind":2,"payload":"jfilyzbymlyJAM{yvahapun_zpnuhs7}"},{"slot":2,"tag":"R-04","kind":1,"payload":"jfilyzbymlyJAM{yvahapun_zpnuhs2Y}"},{"slot":3,"tag":"V-29","kind":0,"payload":"jfilyzbymlyJAM{ylshf_zopma8U}"},{"slot":4,"tag":"N-11","kind":5,"payload":"jfilyzbymlyJAM{zahapj_yvahapvu4T}"},{"slot":5,"tag":"Q-38","kind":3,"payload":"jfilyzbymlyJAM{zljavy_abyu6W}"},{"slot":6,"tag":"M-06","kind":4,"payload":"jfilyzbymlyJAM{zpnuhs_kypma9A}"}]</script>
+<script>
+
+function digestHex(input) {
+  function rotr(n,x){return (x>>>n)|(x<<(32-n));}
+  const K=[
+    0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,
+    0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,
+    0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,
+    0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,
+    0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,
+    0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,
+    0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,
+    0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2
+  ];
+  const H=[0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19];
+  const bytes=new TextEncoder().encode(input);
+  const bitLen=bytes.length*8;
+  const total=((bytes.length+9+63)>>6)<<6;
+  const m=new Uint8Array(total);
+  m.set(bytes); m[bytes.length]=0x80;
+  const dv=new DataView(m.buffer);
+  dv.setUint32(total-8, Math.floor(bitLen/0x100000000), false);
+  dv.setUint32(total-4, bitLen>>>0, false);
+  const W=new Uint32Array(64);
+  for(let off=0;off<total;off+=64){
+    for(let t=0;t<16;t++) W[t]=dv.getUint32(off+t*4,false);
+    for(let t=16;t<64;t++){
+      const s0=rotr(7,W[t-15])^rotr(18,W[t-15])^(W[t-15]>>>3);
+      const s1=rotr(17,W[t-2])^rotr(19,W[t-2])^(W[t-2]>>>10);
+      W[t]=(W[t-16]+s0+W[t-7]+s1)>>>0;
+    }
+    let [a,b,c,d,e,f,g,h]=H;
+    for(let t=0;t<64;t++){
+      const S1=rotr(6,e)^rotr(11,e)^rotr(25,e);
+      const ch=(e&f)^((~e)&g);
+      const temp1=(h+S1+ch+K[t]+W[t])>>>0;
+      const S0=rotr(2,a)^rotr(13,a)^rotr(22,a);
+      const maj=(a&b)^(a&c)^(b&c);
+      const temp2=(S0+maj)>>>0;
+      h=g; g=f; f=e; e=(d+temp1)>>>0; d=c; c=b; b=a; a=(temp1+temp2)>>>0;
+    }
+    H[0]=(H[0]+a)>>>0; H[1]=(H[1]+b)>>>0; H[2]=(H[2]+c)>>>0; H[3]=(H[3]+d)>>>0;
+    H[4]=(H[4]+e)>>>0; H[5]=(H[5]+f)>>>0; H[6]=(H[6]+g)>>>0; H[7]=(H[7]+h)>>>0;
+  }
+  return H.map(x=>x.toString(16).padStart(8,'0')).join('');
+}
+
+
+const source = document.getElementById('archive').textContent;
+const packets = JSON.parse(source);
+
+const sealParts = ["01788472", "893170c7", "ca1b94a4", "5b47326f", "ca600bba", "964f4ad2", "637a27a4", "28644649"];
+function reverseText(s){ return s.split('').reverse().join(''); }
+const seal = sealParts.map((v,i)=> i % 2 ? reverseText(v) : v).join('');
+
+function b64ToText(v){
+  return decodeURIComponent(Array.prototype.map.call(atob(v), c =>
+    '%' + c.charCodeAt(0).toString(16).padStart(2,'0')).join(''));
+}
+function hexToText(v){
+  let out='';
+  for(let i=0;i<v.length;i+=2) out += String.fromCharCode(parseInt(v.slice(i,i+2),16));
+  return out;
+}
+function unpack(v,kind){
+  if(kind===0) return v;
+  if(kind===1) return reverseText(v);
+  if(kind===2) return b64ToText(v);
+  if(kind===3) return hexToText(v);
+  if(kind===4) return decodeURIComponent(v);
+  if(kind===5) return reverseText(b64ToText(v));
+  return v;
+}
+
+function renderPackets(){
+  const box=document.getElementById('records');
+  const view=packets.map(p=>({...p}));
+  const trace=["nominal","relay","cache","replay","mirror","archive"];
+  view.sort((a,b)=>((a.slot*17)%29)-((b.slot*17)%29));
+  box.innerHTML=view.map((p,i)=>`
+    <article class="record">
+      <small>ARCHIVE ${p.tag} · NODE ${String((p.slot*13)%97).padStart(2,'0')}</small>
+      <code>${p.payload}</code>
+      <small style="margin-top:8px">transport profile: ${p.kind} · trace: ${trace[i]}</small>
+    </article>`).join('');
+}
+renderPackets();
+
+window.inspectArchive=function(){
+  return packets.map(p=>({slot:p.slot,tag:p.tag,kind:p.kind,decoded:unpack(p.payload,p.kind)}));
+};
+console.info("%cCYBERSURFER CTF","color:#3dd9ff;font-weight:bold");
+console.info("Archive helper available: inspectArchive()");
+
+const answer=document.getElementById('answer');
+const status=document.getElementById('status');
+
+document.getElementById('submitBtn').addEventListener('click',()=>{
+  const candidate=answer.value.trim();
+  if(!candidate){
+    status.textContent="Enter a recovered candidate first.";
+    return;
+  }
+  const got=digestHex(candidate);
+  if(got===seal){
+    status.innerHTML="✓ ACCESS GRANTED — authentic transmission confirmed.<br><br><strong style='color:#57e389'>FLAG ACCEPTED</strong>";
+  }else{
+    status.innerHTML="✗ SEAL REJECTED — that candidate is not the authentic transmission.";
+  }
+});
+
+const hints=["Try all 26 rotations; the message keeps punctuation and digits.", "Decode every archive record before deciding which candidate is real.", "The terminal seal is the final authority."];
+let h=0;
+document.getElementById('hintBtn').addEventListener('click',()=>{
+  h=Math.min(h+1,hints.length);
+  const area=document.getElementById('hint');
+  area.style.display='block';
+  area.textContent=hints[h-1];
+});
+
+const phantomPath = [17,4,9,22]; function dormantRoute(n){return phantomPath.map(x=>(x*n)%23)} dormantRoute(3);
+</script>
+</main>
+</body>
+</html>
